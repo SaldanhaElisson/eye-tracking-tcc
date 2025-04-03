@@ -46,9 +46,9 @@ export const createShowDataTrial = (jsPsych: any) => ({
     });
 
     const media_colors: Record<string, string> = {
-      "/image1.jpg": "rgba(255, 255, 255, 0.7)",
-      "/image2.jpg": "rgba(255, 0, 0, 0.7)",
-      "/image3.jpg": "rgba(0, 0, 255, 0.7)",
+      "/001.jpg": "rgba(255, 255, 255, 0.7)",
+      "/002.jpg": "rgba(255, 0, 0, 0.7)",
+      "/004.jpg": "rgba(0, 0, 255, 0.7)",
     };
 
     let html = `

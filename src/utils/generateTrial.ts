@@ -13,10 +13,9 @@ export default function generateTrial(
     
     return filePaths.map((path) => ({
         type: mediaPlugin,
-        stimulus: path,  // Removido o array [] aqui
+        stimulus: path,  
         choices: [" "],
-        stimulus_width: 1700,
-        stimulus_height: 800,
+        stimulus_width: 800,
         extensions: [{
             type: jsPsychExtensionWebgazer,
             params: { 

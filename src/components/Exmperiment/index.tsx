@@ -3,17 +3,17 @@ import { initJsPsych } from "jspsych";
 import jsPsychExtensionWebgazer from "@jspsych/extension-webgazer";
 import * as trials from './trials';
 import generateTrial from "../../utils/generateTrial";
+import "./index.css";
 
 const Experiment = () => {
     useEffect(() => {
         const jsPsych = initJsPsych({
             extensions: [{ type: jsPsychExtensionWebgazer }],
             on_finish: () => {
-                console.log('Experiment finished');
+                jsPsych.data.get().localSave('csv', 'eye-tracking-data.csv');
             }
         });
 
-        // Verifique se todos os trials estão corretos
         const experimentTimeline = [
             trials.createPreloadTrial(),
             trials.createCameraInstructions(),
@@ -24,7 +24,9 @@ const Experiment = () => {
             trials.createValidationTrial(),
             trials.createRecalibrateTrial(jsPsych),
             trials.createBeginTrial(),
-            ...generateTrial(["/image1.jpg"], "img")
+            ...generateTrial(["/001.jpg", "/002.jpg", "/004.jpg"], "img"),
+            trials.createShowDataTrial(jsPsych)
+
         ];
 
         console.log('Experiment timeline:', experimentTimeline);
