@@ -1,4 +1,32 @@
 import jsPsychHtmlButtonResponse from "@jspsych/plugin-html-button-response";
+import jsPsychPreload from "@jspsych/plugin-preload";
+
+export const createPreloadTrial = () => ({
+  type: jsPsychPreload,
+  auto_preload: true
+});
+
+export const createCameraInstructions = () => ({
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p>Esse experimento é uma versão beta</p>
+    <p>A primeira etapa consiste em calibração e validação da calibração, caso os valores sejam abaixo do esperado haverá uma etapa de recalibração.</p>
+    <p>Normalmente demora 30 segundos para câmara se inicializar.</p>
+  `,
+  choices: ["Continuar"],
+});
+
+export const createBeginTrial = () => ({
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p>A proxíma etapa consiste em localizar os objetos</p>
+    <p>Como desafio encare os objetos por alguns segundos</p>
+    <p>Para ir a proxíma imagem pressione espaço.</p>
+    <p>Click em continuar, se precisar tirar um descanso.</p>
+  `,
+  choices: ["Continuar"],
+});
+
 
 function getColorForPath(path: string): string {
   let hash = 0;
