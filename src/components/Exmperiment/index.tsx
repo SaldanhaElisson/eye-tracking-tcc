@@ -10,7 +10,7 @@ const Experiment = () => {
         const jsPsych = initJsPsych({
             extensions: [{ type: jsPsychExtensionWebgazer }],
             on_finish: () => {
-                jsPsych.data.get().localSave('csv', 'eye-tracking-data.csv');
+                console.log("Experiment finished");
             }
         });
 
