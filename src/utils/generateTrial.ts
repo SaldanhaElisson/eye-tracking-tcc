@@ -15,7 +15,7 @@ export default function generateTrial(
         type: mediaPlugin,
         stimulus: path,  
         choices: [" "],
-        stimulus_width: 800,
+        stimulus_width: 700,
         extensions: [{
             type: jsPsychExtensionWebgazer,
             params: { 

@@ -28,17 +28,19 @@ export const createBeginTrial = () => ({
 });
 
 
+
 function getColorForPath(path: string): string {
   let hash = 0;
   for (let i = 0; i < path.length; i++) {
     hash = path.charCodeAt(i) + ((hash << 5) - hash);
   }
   
-  const r = (hash & 0xFF) % 200 + 55;  
-  const g = ((hash >> 8) & 0xFF) % 200 + 55;
-  const b = ((hash >> 16) & 0xFF) % 200 + 55;
+  const channel = hash % 3;
+  const r = channel === 0 ? 200 + (hash % 55) : 50 + (hash % 100);
+  const g = channel === 1 ? 200 + (hash % 55) : 50 + (hash % 100);
+  const b = channel === 2 ? 200 + (hash % 55) : 50 + (hash % 100);
   
-  return `rgba(${r}, ${g}, ${b}, 0.7)`;
+  return `rgba(${r}, ${g}, ${b}, 0.8)`;
 }
 
 function createColorMap(paths: string[]): Record<string, string> {

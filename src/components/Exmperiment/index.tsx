@@ -23,8 +23,9 @@ const Experiment = () => {
             trials.createValidationInstructions(),
             trials.createValidationTrial(),
             trials.createRecalibrateTrial(jsPsych),
+            // trials.createRecalibrateTrial(jsPsych)
             trials.createBeginTrial(),
-            ...generateTrial(["/001.jpg", "/002.jpg", "/004.jpg"], "img"),
+            ...generateTrial(["/001.jpg", "/002.jpg"], "img"),
             trials.createShowDataTrial(jsPsych)
 
         ];
