@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import jsPsychHtmlButtonResponse from "@jspsych/plugin-html-button-response";
 import jsPsychPreload from "@jspsych/plugin-preload";
 
@@ -50,7 +51,6 @@ function createColorMap(paths: string[]): Record<string, string> {
   });
   return colorMap;
 }
-
 export const createShowDataTrial = (jsPsych: any) => ({
   type: jsPsychHtmlButtonResponse,
   stimulus: function () {
@@ -123,14 +123,12 @@ export const createShowDataTrial = (jsPsych: any) => ({
       trials.forEach((trial) => {
         if (trial.webgazer_data) {
           trial.webgazer_data.forEach((gaze: { x: number; y: number }) => {
-            const x = (gaze.x / window.innerWidth) * 100;
-            const y = (gaze.y / window.innerHeight) * 100;
-
+            // Usa as coordenadas relativas já calculadas (x e y em %)
             html += `
               <div style="
                 position: absolute;
-                left: ${x}%;
-                top: ${y}%;
+                left: ${gaze.x}%;
+                top: ${gaze.y}%;
                 width: 8px;
                 height: 8px;
                 background-color: ${color};

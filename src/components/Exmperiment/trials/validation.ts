@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import jsPsychHtmlButtonResponse from "@jspsych/plugin-html-button-response";
 import jsPsychWebgazerValidate from "@jspsych/plugin-webgazer-validate";
 import { createCalibrationTrial } from "./calibration";

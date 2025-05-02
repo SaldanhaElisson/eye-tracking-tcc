@@ -20,9 +20,9 @@ const Experiment = () => {
             trials.createInitCameraTrial(),
             trials.createCalibrationInstructions(),
             trials.createCalibrationTrial(),
-            trials.createValidationInstructions(),
-            trials.createValidationTrial(),
-            trials.createRecalibrateTrial(jsPsych),
+            // trials.createValidationInstructions(),
+            // trials.createValidationTrial(),
+            // trials.createRecalibrateTrial(jsPsych),
             // trials.createRecalibrateTrial(jsPsych)
             trials.createBeginTrial(),
             ...generateTrial(["/001.jpg", "/002.jpg"], "img"),
