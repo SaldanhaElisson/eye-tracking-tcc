@@ -54,8 +54,10 @@ export const createCalibrationInstructions = (jsPsych: any) => ({
 
 export const createCalibrationTrial = (jsPsych: any) => ({ 
   type: jsPsychWebgazerCalibrate,
-  calibration_points: [
-    [25, 25], [75, 25], [50, 50], [25, 75], [75, 75]
+ calibration_points: [
+    [25, 25], [75, 25], [50, 50], [25, 75], [75, 75], 
+    [50, 25], [25, 50], [75, 50], [50, 75], 
+    [10, 10], [90, 10], [10, 90], [90, 90],
   ],
   calibration_mode: "click",
   point_color: "blue",

@@ -20,10 +20,12 @@ export const createValidationInstructions = () => ({
 export const createValidationTrial = () => ({ 
   type: jsPsychWebgazerValidate,
   validation_points: [
-    [25, 25], [75, 25], [50, 50], [25, 75], [75, 75]
+    [25, 25], [75, 25], [50, 50], [25, 75], [75, 75],
+   
+    [50, 25], [25, 50], [75, 50], [50, 75], 
+    [10, 10], [90, 10], [10, 90], [90, 90], 
   ],
   roi_radius: 100,
-  target_color: "green",
   time_to_saccade: 1000,
   randomize_validation_order: true,
   validation_duration: 3000,

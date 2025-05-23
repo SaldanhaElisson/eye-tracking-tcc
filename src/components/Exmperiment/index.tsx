@@ -59,8 +59,9 @@ const Experiment = () => {
             trials.createCalibrationInstructions(jsPsych),
             trials.createCalibrationTrial(jsPsych),
             trials.createValidationInstructions(),
+            trials.createValidationTrial(),
             trials.createRecalibrateTrial(jsPsych),
-            trials.createRecalibrateTrial(jsPsych),
+            // trials.createRecalibrateTrial(jsPsych),
 
             {
                 type: HtmlKeyboardResponsePlugin,
