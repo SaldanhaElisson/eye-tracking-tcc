@@ -3,25 +3,24 @@ import jsPsychHtmlButtonResponse from "@jspsych/plugin-html-button-response";
 import jsPsychWebgazerValidate from "@jspsych/plugin-webgazer-validate";
 import { createCalibrationTrial } from "./calibration";
 
-export const createValidationInstructions = () => ({
+
+export const createValidationInstructions = () => ({ 
   type: jsPsychHtmlButtonResponse,
   stimulus: `
-    <p>Agora nós iremos calcular a acuracia, estamos na etapa de validação.</p>
-    <p>Olhe para os pontos que irão aparecer na tela.</p>
-    <p style="font-weight: bold;">Você não rpecisa clicar neles</p>
+    <p>Agora, vamos **validar a precisão** da calibração.</p>
+    <p>Você verá pontos novamente. **Olhe para cada ponto**, mas desta vez **NÃO PRECISA CLICAR**.</p>
+    <p>Apenas siga-os com o olhar para que o sistema possa verificar o quão bem ele está rastreando.</p>
+    <p style="font-size: 16px; color: #555;">(Observe o ponto azul. Tente fazê-lo se mover com precisão para cada ponto.)</p>
   `,
-  choices: ["Continue"],
-  post_trial_gap: 1000,
+  choices: ["Começar Validação"],
+  post_trial_gap: 1000
 });
 
-export const createValidationTrial = () => ({
+
+export const createValidationTrial = () => ({ 
   type: jsPsychWebgazerValidate,
   validation_points: [
-    [25, 25],
-    [75, 25],
-    [50, 50],
-    [25, 75],
-    [75, 75],
+    [25, 25], [75, 25], [50, 50], [25, 75], [75, 75]
   ],
   roi_radius: 100,
   target_color: "green",
@@ -32,29 +31,45 @@ export const createValidationTrial = () => ({
   data: {
     task: "validate",
   },
+  
 });
 
-export const createRecalibrateInstructions = () => ({
+export const createRecalibrateInstructions = () => ({ 
   type: jsPsychHtmlButtonResponse,
   stimulus: `
     <p>A precisão da calibração está um pouco abaixo do esperado.</p>
     <p>Vamos tentar calibrar mais uma vez.</p>
-    <p>Na próxima tela, olhe para os pontos e clique neles.</p>
+    <p>Por favor, **olhe e CLIQUE nos pontos** que irão aparecer na tela.</p>
   `,
-  choices: ['OK'],
+  choices: ['OK']
 });
 
 export const createRecalibrateTrial = (jsPsych: any) => ({
   timeline: [
     createRecalibrateInstructions(),
-    createCalibrationTrial(),
-    createValidationInstructions(),
-    createValidationTrial()
+    createCalibrationTrial(jsPsych),
+    createValidationInstructions(), 
+    createValidationTrial() 
   ],
+
   conditional_function: function () {
-    const validation_data = jsPsych.data.get().filter({ task: 'validate' }).values()[0];
-    const minimum_percent_acceptable = 80;
-    return validation_data.percent_in_roi.some((x: number) => x < minimum_percent_acceptable);
+    const validation_data = jsPsych.data.get().filter({ task: 'validate' }).values();
+    if (validation_data.length === 0) {
+        console.warn("Nenhum dado de validação encontrado para verificar a precisão da recalibração.");
+        return false; 
+    }
+    const last_validation_data = validation_data[validation_data.length - 1];
+
+    const minimum_percent_acceptable = 80; 
+    
+    const needs_recalibration = last_validation_data.percent_in_roi.some((x: number) => x < minimum_percent_acceptable);
+
+    if (needs_recalibration) {
+        console.log("Recalibração necessária. Pelo menos um ponto de validação está abaixo de", minimum_percent_acceptable, "%.");
+    } else {
+        console.log("Calibração aceitável. Não é necessária recalibração.");
+    }
+    return needs_recalibration;
   },
   data: {
     phase: 'recalibration',

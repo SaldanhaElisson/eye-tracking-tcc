@@ -49,3 +49,72 @@
 .validation-point{
     background-color: red !important;
 }
+
+/* Estilos para o container do ImageUploader */
+.image-uploader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh; /* Ocupa a altura total da viewport */
+    width: 100vw; /* Ocupa a largura total da viewport */
+    font-family: Arial, sans-serif; /* Consistente com o JsPsych */
+    font-size: 20px; /* Consistente com o JsPsych */
+    text-align: center;
+    padding: 20px; /* Espaçamento interno */
+    box-sizing: border-box; /* Inclui padding e borda na largura/altura */
+}
+
+/* Estilos para o título e subtítulos */
+.image-uploader-container h3,
+.image-uploader-container h4 {
+    margin-top: 50px; /* Espaçamento superior como em .jspsych-content */
+    margin-bottom: 10px; /* Espaçamento inferior */
+    color: #333; /* Uma cor escura para o texto */
+}
+
+/* Estilos para o input de arquivo */
+.image-uploader-container input[type="file"] {
+    margin: 20px 0; /* Espaçamento acima e abaixo do input */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+/* Estilos para a área de pré-visualização das imagens */
+.image-previews {
+    margin-top: 30px; /* Espaçamento acima da pré-visualização */
+    margin-bottom: 30px; /* Espaçamento abaixo da pré-visualização */
+    max-width: 800px; /* Limita a largura da área de pré-visualização */
+    overflow-x: auto; /* Adiciona scroll se muitas imagens */
+}
+
+.image-previews img {
+    margin: 5px; /* Espaçamento entre as miniaturas */
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Estilo para o botão de upload/início do experimento */
+.image-uploader-container button {
+    height: 3rem; /* Um pouco maior que o jspsych-btn */
+    background-color: cadetblue; /* Mesma cor do jspsych-btn */
+    color: white; /* Texto branco para contraste */
+    border-radius: 5px;
+    padding: 10px 25px; /* Mais padding para um botão maior */
+    border: none;
+    cursor: pointer;
+    font-size: 20px; /* Mesma fonte do jspsych-content */
+    transition: background-color 0.3s ease; /* Transição suave no hover */
+}
+
+.image-uploader-container button:hover:not(:disabled) {
+    background-color: #589697; /* Um tom ligeiramente mais escuro no hover */
+}
+
+.image-uploader-container button:disabled {
+    background-color: #cccccc; /* Cor para botão desabilitado */
+    cursor: not-allowed;
+}

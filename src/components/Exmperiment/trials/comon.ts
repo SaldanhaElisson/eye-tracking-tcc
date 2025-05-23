@@ -1,18 +1,39 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import jsPsychHtmlButtonResponse from "@jspsych/plugin-html-button-response";
 import jsPsychPreload from "@jspsych/plugin-preload";
 
-export const createPreloadTrial = () => ({
-  type: jsPsychPreload,
-  auto_preload: true
+export const createPreloadTrial = (imageUrls: string[] = []) => ({
+    type: jsPsychPreload,
+    images: imageUrls,
+    message: `<p>Carregando os recursos para o experimento. Por favor, aguarde...</p>`,
+    show_progress_bar: true,
+    continue_after_error: false,
+    on_finish: function() {
+        console.log("Pré-carregamento de imagens concluído!");
+    }
 });
 
 export const createCameraInstructions = () => ({
   type: jsPsychHtmlButtonResponse,
   stimulus: `
-    <p>Esse experimento é uma versão beta</p>
-    <p>A primeira etapa consiste em calibração e validação da calibração, caso os valores sejam abaixo do esperado haverá uma etapa de recalibração.</p>
-    <p>Normalmente demora 30 segundos para câmara se inicializar.</p>
+    <p style="font-size: 24px; font-weight: bold;">Bem-vindo ao Experimento!</p>
+    <p>Este estudo utiliza uma tecnologia de rastreamento ocular experimental (beta), o que significa que precisamos da sua ajuda para garantir a melhor precisão possível.</p>
+    
+    <p style="font-size: 20px; margin-top: 30px;"><b>Primeiro Passo: Configuração da Câmera</b></p>
+    <p>Para começar, pediremos acesso à sua webcam. Por favor, <b>permita o acesso à câmera</b> quando solicitado pelo seu navegador.</p>
+    
+    <p>Em seguida, você verá uma caixa de enquadramento na tela. É crucial que você:</p>
+    <ul>
+      <li><b>Centralize seu rosto</b> dentro dessa caixa.</li>
+      <li><b>Olhe diretamente para a câmera</b>.</li>
+      <li>Tente <b>manter sua cabeça o mais parada possível</b> durante todo o experimento. Ajuste sua posição agora para ficar confortável.</li>
+    </ul>
+    <p>A câmera pode levar até 30 segundos para se inicializar e a caixa ficar verde, indicando que seu rosto foi detectado. Por favor, seja paciente.</p>
+    
+    <p style="font-size: 20px; margin-top: 30px;"><b>Próximos Passos: Calibração e Validação</b></p>
+    <p>Após a configuração da câmera, passaremos por etapas de **calibração** e **validação** do sistema de rastreamento ocular. Se a precisão estiver abaixo do esperado, teremos uma etapa de **recalibração**.</p>
+    
+    <p style="margin-top: 40px;">Quando estiver pronto, clique em "Continuar".</p>
   `,
   choices: ["Continuar"],
 });
@@ -28,127 +49,3 @@ export const createBeginTrial = () => ({
   choices: ["Continuar"],
 });
 
-
-
-function getColorForPath(path: string): string {
-  let hash = 0;
-  for (let i = 0; i < path.length; i++) {
-    hash = path.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  
-  const channel = hash % 3;
-  const r = channel === 0 ? 200 + (hash % 55) : 50 + (hash % 100);
-  const g = channel === 1 ? 200 + (hash % 55) : 50 + (hash % 100);
-  const b = channel === 2 ? 200 + (hash % 55) : 50 + (hash % 100);
-  
-  return `rgba(${r}, ${g}, ${b}, 0.8)`;
-}
-
-function createColorMap(paths: string[]): Record<string, string> {
-  const colorMap: Record<string, string> = {};
-  paths.forEach(path => {
-    colorMap[path] = getColorForPath(path);
-  });
-  return colorMap;
-}
-export const createShowDataTrial = (jsPsych: any) => ({
-  type: jsPsychHtmlButtonResponse,
-  stimulus: function () {
-    jsPsych.data.get().localSave('csv', 'eye-tracking-data.csv');
-    
-    const trial_data = jsPsych.data.get().values();
-    const data_by_media: Record<string, any[]> = {};
-    const all_paths: string[] = [];
-    
-    trial_data.forEach((trial: any) => {
-      const media_path = trial.path;
-      if (media_path) {
-        if (!data_by_media[media_path]) {
-          data_by_media[media_path] = [];
-          all_paths.push(media_path);
-        }
-        data_by_media[media_path].push(trial);
-      }
-    });
-
-    const media_colors = createColorMap(all_paths);
-
-    let legendHtml = '<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 20px;">';
-    all_paths.forEach(path => {
-      const filename = path.split('/').pop() || path;
-      legendHtml += `
-        <div style="display: flex; align-items: center;">
-          <div style="
-            width: 15px;
-            height: 15px;
-            background-color: ${media_colors[path]};
-            border-radius: 50%;
-            margin-right: 5px;
-          "></div>
-          <span style="color: white;">${filename}</span>
-        </div>
-      `;
-    });
-    legendHtml += '</div>';
-
-    let html = `
-      <div style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        padding: 20px;
-        box-sizing: border-box;
-      ">
-        <h2 style="color: white; margin-bottom: 10px;">Visualização dos Pontos de Gaze</h2>
-        ${legendHtml}
-        <div style="
-          position: relative;
-          width: 90vw;
-          height: 70vh;
-          border: 3px solid white;
-          overflow: hidden;
-          background: rgba(0, 0, 0, 0.7);
-        ">
-    `;
-
-    Object.entries(data_by_media).forEach(([media_path, trials]) => {
-      const color = media_colors[media_path];
-      trials.forEach((trial) => {
-        if (trial.webgazer_data) {
-          trial.webgazer_data.forEach((gaze: { x: number; y: number }) => {
-            // Usa as coordenadas relativas já calculadas (x e y em %)
-            html += `
-              <div style="
-                position: absolute;
-                left: ${gaze.x}%;
-                top: ${gaze.y}%;
-                width: 8px;
-                height: 8px;
-                background-color: ${color};
-                border-radius: 50%;
-                transform: translate(-50%, -50%);
-                pointer-events: none;
-              "></div>
-            `;
-          });
-        }
-      });
-    });
-
-    html += `
-        </div>
-        <p style="color: white; margin-top: 15px;">Cada cor representa os pontos de gaze de uma imagem diferente</p>
-      </div>
-    `;
-
-    return html;
-  },
-  choices: ["Finalizar"],
-});
