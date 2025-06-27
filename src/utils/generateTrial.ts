@@ -22,7 +22,8 @@ export default function generateTrial(
         stimulus: image.url,
         choices: [" "],
         stimulus_width: 700,
-      
+        stimulus_height: 900,
+
         extensions: [{
             type: jsPsychExtensionWebgazer,
             params: {
@@ -35,9 +36,9 @@ export default function generateTrial(
             path: image.url,
             original_filename: image.name,
             trialType: typeFile === "video" ? "video" : "image",
-           
+
         },
-  
-      
+
+
     }));
 }

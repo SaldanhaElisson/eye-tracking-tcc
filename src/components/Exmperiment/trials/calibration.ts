@@ -4,13 +4,13 @@ import jsPsychWebgazerCalibrate from "@jspsych/plugin-webgazer-calibrate";
 import WebgazerInitCamera from "@jspsych/plugin-webgazer-init-camera";
 
 interface WebgazerExtensionWithMethods {
-    setRegressionType: (type: 'ridge' | 'weightedRidge' | 'threadedRidge') => void;
-    showVideo: () => void;
-    hideVideo: () => void;
-    showPredictions: () => void;
-    hidePredictions: () => void;
-    startMouseCalibration: () => void;
-    stopMouseCalibration: () => void;
+  setRegressionType: (type: 'ridge' | 'weightedRidge' | 'threadedRidge') => void;
+  showVideo: () => void;
+  hideVideo: () => void;
+  showPredictions: () => void;
+  hidePredictions: () => void;
+  startMouseCalibration: () => void;
+  stopMouseCalibration: () => void;
 }
 
 export const createInitCameraTrial = () => ({
@@ -43,20 +43,19 @@ export const createCalibrationInstructions = (jsPsych: any) => ({
     <p style="font-size: 16px; color: #555;">(Se você vir um pequeno ponto azul seguindo seu olhar, tente fazê-lo se mover com precisão para cada ponto de calibração.)</p>
   `,
   choices: ["Começar Calibração"],
-   on_start: function() {
+  on_start: function () {
     const webgazerExt = jsPsych.extensions.webgazer as WebgazerExtensionWithMethods;
     if (webgazerExt) {
-        webgazerExt.hideVideo();     
-        webgazerExt.showPredictions();
+      webgazerExt.hideVideo();
     }
   }
 });
 
-export const createCalibrationTrial = (jsPsych: any) => ({ 
+export const createCalibrationTrial = (jsPsych: any) => ({
   type: jsPsychWebgazerCalibrate,
- calibration_points: [
-    [25, 25], [75, 25], [50, 50], [25, 75], [75, 75], 
-    [50, 25], [25, 50], [75, 50], [50, 75], 
+  calibration_points: [
+    [25, 25], [75, 25], [50, 50], [25, 75], [75, 75],
+    [50, 25], [25, 50], [75, 50], [50, 75],
     [10, 10], [90, 10], [10, 90], [90, 90],
   ],
   calibration_mode: "click",
@@ -64,11 +63,10 @@ export const createCalibrationTrial = (jsPsych: any) => ({
   point_size: 30,
   repetitions_per_point: 3,
   randomize_calibration_order: true,
-  on_start: function() { 
+  on_start: function () {
     const webgazerExt = jsPsych.extensions.webgazer as WebgazerExtensionWithMethods;
     if (webgazerExt) {
-        webgazerExt.hideVideo();
-        webgazerExt.showPredictions();
+      webgazerExt.hideVideo();
     }
   }
 });
