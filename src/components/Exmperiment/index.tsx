@@ -86,7 +86,6 @@ const Experiment = () => {
 
         ];
 
-        console.log('Experiment timeline:', experimentTimeline);
 
         try {
             jsPsych.run(experimentTimeline);
