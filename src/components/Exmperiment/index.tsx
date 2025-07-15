@@ -49,6 +49,7 @@ const Experiment = () => {
 
         if (webgazerExt) {
             console.log("WebGazer regression type set to 'weightedRidge'.");
+            webgazerExt.setRegressionType("weightedRidge")
         }
 
         const imageUrlsToPreload = uploadedImages.map(image => image.url);
