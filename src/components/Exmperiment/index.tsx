@@ -47,11 +47,7 @@ const Experiment = () => {
 
         const webgazerExt = jsPsych.extensions.webgazer as WebgazerExtensionWithMethods | undefined;
 
-        if (webgazerExt) {
-            console.log("WebGazer regression type set to 'weightedRidge'.");
-            webgazerExt.setRegressionType("weightedRidge")
-        }
-
+  
         const imageUrlsToPreload = uploadedImages.map(image => image.url);
 
         const experimentTimeline = [
