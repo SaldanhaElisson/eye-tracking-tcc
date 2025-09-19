@@ -20,5 +20,4 @@ export interface UploadPayload {
     images: UploadedImage[];
     width: number | null;
     height: number | null;
-    qtdRecalibration: number;
 }

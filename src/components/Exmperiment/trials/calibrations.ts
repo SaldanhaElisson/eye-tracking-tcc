@@ -31,54 +31,118 @@ export const createCalibrationTrial = (jsPsych: any) => ({
 });
 
 
-export const createRecalibrateInstructions = () => ({ 
+export const createShowPrecisionTrial = (jsPsych: any) => ({
+  type: HtmlKeyboardResponsePlugin,
+  stimulus: () => {
+    const validation_data = jsPsych.data.get().filter({ task: 'validate' }).last(1).values()[0];
+
+    if (validation_data && Array.isArray(validation_data.percent_in_roi)) {
+      const lowest_precision = Math.min(...validation_data.percent_in_roi);
+
+      return `
+              <div style="font-size: 20px;">
+                  <p>Teste de calibração inicial concluído.</p>
+                  <p>Sua precisão (ponto mais crítico) foi de: <strong>${lowest_precision.toFixed(2)}%</strong></p>
+                  <br>
+                  <p>A seguir, você terá a opção de recalibrar caso não esteja satisfeito(a).</p>
+                  <br>
+                  <p>Pressione qualquer tecla para continuar.</p>
+              </div>
+          `;
+    } else {
+      return `
+              <p>Não foi possível calcular a precisão. Pressione qualquer tecla para continuar.</p>
+          `;
+    }
+  },
+  choices: 'ALL_KEYS'
+});
+
+
+export const createVoluntaryRecalibrationLoop = (jsPsych: any) => {
+
+  const askRecalibrateTrial = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: () => {
+      const validation_data = jsPsych.data.get().filter({ task: 'validate' }).last(1).values()[0];
+      const lowest_precision = validation_data ? Math.min(...validation_data.percent_in_roi) : 0;
+      return `
+        <p>Sua precisão atual (ponto mais crítico) é de <strong>${lowest_precision.toFixed(2)}%</strong>.</p>
+        <p>Você gostaria de tentar uma nova recalibração para melhorar este valor?</p>
+      `;
+    },
+    choices: ['Sim, tentar recalibrar', 'Não, estou satisfeito(a) e quero continuar'],
+    data: {
+      task: 'ask_recalibrate'
+    }
+  };
+
+  const recalibrationActionsNode = {
+    timeline: [
+      createRecalibrateInstructions(jsPsych),
+      createCalibrationTrial(jsPsych),
+      createValidationInstructions(),
+      createValidationTrial()
+    ],
+    conditional_function: function () {
+      const ask_data = jsPsych.data.get().filter({ task: 'ask_recalibrate' }).last(1).values()[0];
+      const userChoice = ask_data.response;
+
+      if (userChoice === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const voluntaryRecalibrationNode = {
+    timeline: [
+      askRecalibrateTrial,
+      recalibrationActionsNode
+    ],
+    loop_function: function () {
+      const ask_data = jsPsych.data.get().filter({ task: 'ask_recalibrate' }).last(1).values()[0];
+      const userChoice = ask_data.response;
+
+      if (userChoice === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  return voluntaryRecalibrationNode;
+};
+
+export const createRecalibrateInstructions = (jsPsych: any) => ({
   type: jsPsychHtmlButtonResponse,
-  stimulus: `
-    <p>A precisão da calibração está um pouco abaixo do esperado.</p>
-    <p>Vamos tentar calibrar mais uma vez.</p>
-    <p>Por favor, olhe e CLIQUE nos pontos que irão aparecer na tela.</p>
-  `,
+  stimulus: () => {
+    const validation_data = jsPsych.data.get().filter({ task: 'validate' }).last(1).values()[0];
+
+    let precision_text;
+
+    if (validation_data && Array.isArray(validation_data.percent_in_roi)) {
+      const lowest_precision = Math.min(...validation_data.percent_in_roi);
+      precision_text = `<p>Sua menor precisão foi de <strong>${lowest_precision.toFixed(2)}%</strong></p>`;
+    }
+
+    return `
+      ${precision_text}
+      <p>Vamos tentar calibrar mais uma vez.</p>
+      <p>Por favor, olhe e CLIQUE nos pontos que irão aparecer na tela.</p>
+    `;
+  },
   choices: ['OK']
 });
 
-export const createRecalibrateTrial = (jsPsych: any) => ({
-  timeline: [
-    createRecalibrateInstructions(),
-    createCalibrationTrial(jsPsych),
-    createValidationInstructions(), 
-    createValidationTrial() 
-  ],
-
-  conditional_function: function () {
-    const validation_data = jsPsych.data.get().filter({ task: 'validate' }).values();
-    if (validation_data.length === 0) {
-        console.warn("Nenhum dado de validação encontrado para verificar a precisão da recalibração.");
-        return false; 
-    }
-    const last_validation_data = validation_data[validation_data.length - 1];
-
-    const minimum_percent_acceptable = 80; 
-    
-    const needs_recalibration = last_validation_data.percent_in_roi.some((x: number) => x < minimum_percent_acceptable);
-
-    if (needs_recalibration) {
-        console.log("Recalibração necessária. Pelo menos um ponto de validação está abaixo de", minimum_percent_acceptable, "%.");
-    } else {
-        console.log("Calibração aceitável. Não é necessária recalibração.");
-    }
-    return needs_recalibration;
-  },
-  data: {
-    phase: 'recalibration',
-  },
-});
-
 export const calibrationCompletedTrial = {
-    type: HtmlKeyboardResponsePlugin,
-    stimulus: `
-        <p>Calibração concluída! Preparando para o experimento.</p>
-        <p>Mantenha sua cabeça o mais parada possível durante os próximos estímulos.</p>
-    `,
-    choices: 'NO_KEYS', 
-    trial_duration: 5000, 
+  type: HtmlKeyboardResponsePlugin,
+  stimulus: `
+      <p>Calibração concluída! Preparando para o experimento.</p>
+      <p>Mantenha sua cabeça o mais parada possível durante os próximos estímulos.</p>
+  `,
+  choices: 'NO_KEYS',
+  trial_duration: 5000,
 };

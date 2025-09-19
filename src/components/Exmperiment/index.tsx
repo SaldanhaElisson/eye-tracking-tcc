@@ -14,14 +14,11 @@ const Experiment = () => {
     const [imageWidth, setImageWidth] = useState<number>(700);
     const [imageHeight, setImageHeight] = useState<number>(900);
 
-    const [qtdRecalibration, setQtdRecalibration] = useState<number>(1);
-
     const handleImagesUploaded = (payload: UploadPayload) => {
         setUploadedImages(payload.images);
         setImageWidth(payload.width ?? 700);
         setImageHeight(payload.height ?? 900);
         setExperimentStarted(true);
-        setQtdRecalibration(payload.qtdRecalibration)
     };
 
     useEffect(() => {
@@ -37,24 +34,27 @@ const Experiment = () => {
             }
         });
 
-       const webgazerExt = jsPsych.extensions.webgazer as WebgazerExtensionWithMethods
+        const webgazerExt = jsPsych.extensions.webgazer as WebgazerExtensionWithMethods
+
 
         const imageUrlsToPreload = uploadedImages.map(image => image.url);
 
         const experimentTimeline = [
-            trials.createPreloadTrial(imageUrlsToPreload), 
-            trials.createInitCameraTrial(), 
+            trials.createPreloadTrial(imageUrlsToPreload),
+            trials.createInitCameraTrial(),
             trials.createSetWebgazerRegressionTrial(webgazerExt),
-            
-            trials.createCalibrationInstructions(jsPsych), 
-            trials.createCalibrationTrial(jsPsych), 
+
+            trials.createCalibrationInstructions(jsPsych),
+            trials.createCalibrationTrial(jsPsych),
             trials.createValidationInstructions(),
             trials.createValidationTrial(),
 
-            ...Array.from({ length: qtdRecalibration }, () => trials.createRecalibrateTrial(jsPsych)),
+            trials.createShowPrecisionTrial(jsPsych),
+
+            trials.createVoluntaryRecalibrationLoop(jsPsych),
 
             trials.calibrationCompletedTrial,
-            trials.createBeginTrial(), 
+            trials.createBeginTrial(),
             ...generateTrial(uploadedImages, "img", imageWidth, imageHeight),
 
         ];
@@ -70,7 +70,7 @@ const Experiment = () => {
             uploadedImages.forEach(image => URL.revokeObjectURL(image.url));
         };
 
-    }, [experimentStarted, uploadedImages]);
+    }, [experimentStarted, uploadedImages, imageWidth, imageHeight]);
 
     return (
         <div id="jspsych-container">

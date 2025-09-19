@@ -9,11 +9,9 @@ interface ImageUploaderProps {
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesUploaded }) => {
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<UploadedImage[]>([]);
-    
+
     const [width, setWidth] = useState<string>("700");
     const [height, setHeight] = useState<string>("900");
-
-     const [qtdRecalibration, setQtdRecalibration] = useState<string>("1");
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
@@ -32,13 +30,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesUploaded }) => {
         const parsedWidth = width ? parseInt(width, 10) : null;
         const parsedHeight = height ? parseInt(height, 10) : null;
 
-        const parseQtdRecalibration = parseInt(qtdRecalibration) 
-        
+
         onImagesUploaded({
             images: previewImages,
             width: parsedWidth,
             height: parsedHeight,
-            qtdRecalibration: parseQtdRecalibration
         });
     };
 
@@ -51,10 +47,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesUploaded }) => {
                 multiple
                 onChange={handleFileChange}
             />
-            
+
             <div className="dimension-inputs">
                 <h4>Definir Tamanho da Imagem (Opcional)</h4>
-                <div  className='size-input-container'>
+                <div className='size-input-container'>
                     <label className='size-input-label'>
                         Largura (px):
                         <input
@@ -66,48 +62,29 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesUploaded }) => {
                                 const value = e.target.value;
                                 if (value === '' || parseInt(value) >= 0) {
                                     setWidth(value);
-                                }}
+                                }
+                            }
                             }
                         />
                     </label>
-                    
+
                     <label className='size-input-label'>
                         Altura (px):
                         <input
                             className='size-input height-input'
                             type="number"
                             value={height}
-                            min="0" 
+                            min="0"
                             onChange={(e) => {
                                 const value = e.target.value;
                                 if (value === '' || parseInt(value) >= 0) {
                                     setHeight(value);
-                                }}
+                                }
+                            }
                             }
                         />
                     </label>
                 </div>
-            </div>
-
-            <div className='qtd-recalibration-container'>
-                <h4>Definir Quantidade de Recalibração (Opcional)  </h4>
-                <label className='label-qtd-recalibration-input'>
-                   Quantidade (Un) 
-                    <input
-                        className='qtd-recalibration-input'
-                        type='number'
-                        min={1}
-                        value={qtdRecalibration}
-                        onChange={(e) => {
-                            const value = e.target.value;
-
-                            if(value === '' || parseInt(value) >=0){
-                                setQtdRecalibration(value)
-                            }
-                        }}
-                    />
-                </label>
-
             </div>
 
             {previewImages.length > 0 && (
