@@ -1,47 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jsPsychHtmlButtonResponse from "@jspsych/plugin-html-button-response";
-import jsPsychWebgazerValidate from "@jspsych/plugin-webgazer-validate";
-import { createCalibrationTrial } from "./calibration";
+import jsPsychWebgazerCalibrate from "@jspsych/plugin-webgazer-calibrate";
+import HtmlKeyboardResponsePlugin from '@jspsych/plugin-html-keyboard-response';
+import { createValidationInstructions, createValidationTrial } from "./validations";
 
 
-export const createValidationInstructions = () => ({ 
+
+export const createCalibrationInstructions = (jsPsych: any) => ({
   type: jsPsychHtmlButtonResponse,
   stimulus: `
-    <p>Agora, vamos **validar a precisão** da calibração.</p>
-    <p>Você verá pontos novamente. **Olhe para cada ponto**, mas desta vez **NÃO PRECISA CLICAR**.</p>
-    <p>Apenas siga-os com o olhar para que o sistema possa verificar o quão bem ele está rastreando.</p>
-    <p style="font-size: 16px; color: #555;">(Observe o ponto azul. Tente fazê-lo se mover com precisão para cada ponto.)</p>
+    <p>A seguir, faremos a calibração do sistema de rastreamento ocular.</p>
+    <p>Você verá uma sequência de pontos na tela. Por favor, olhe fixamente para cada ponto e CLIQUE NELE quando ele aparecer.</p>
+    <p>Faça isso com precisão, pois uma boa calibração é crucial para a qualidade dos dados.</p>
+    <p>Tempo estimado: aproximadamente 2 minutos.</p>
   `,
-  choices: ["Começar Validação"],
-  post_trial_gap: 1000
+  choices: ["Começar Calibração"]
 });
 
-
-export const createValidationTrial = () => ({ 
-  type: jsPsychWebgazerValidate,
-  validation_points: [
+export const createCalibrationTrial = (jsPsych: any) => ({
+  type: jsPsychWebgazerCalibrate,
+  calibration_points: [
     [25, 25], [75, 25], [50, 50], [25, 75], [75, 75],
-   
-    [50, 25], [25, 50], [75, 50], [50, 75], 
-    [10, 10], [90, 10], [10, 90], [90, 90], 
+    [50, 25], [25, 50], [75, 50], [50, 75],
+    [10, 10], [90, 10], [10, 90], [90, 90]
   ],
-  roi_radius: 100,
-  time_to_saccade: 1000,
-  randomize_validation_order: true,
-  validation_duration: 3000,
+  calibration_mode: "click",
   point_size: 30,
-  data: {
-    task: "validate",
-  },
-  
+  repetitions_per_point: 3,
+  randomize_calibration_order: true,
 });
+
 
 export const createRecalibrateInstructions = () => ({ 
   type: jsPsychHtmlButtonResponse,
   stimulus: `
     <p>A precisão da calibração está um pouco abaixo do esperado.</p>
     <p>Vamos tentar calibrar mais uma vez.</p>
-    <p>Por favor, **olhe e CLIQUE nos pontos** que irão aparecer na tela.</p>
+    <p>Por favor, olhe e CLIQUE nos pontos que irão aparecer na tela.</p>
   `,
   choices: ['OK']
 });
@@ -77,3 +72,13 @@ export const createRecalibrateTrial = (jsPsych: any) => ({
     phase: 'recalibration',
   },
 });
+
+export const calibrationCompletedTrial = {
+    type: HtmlKeyboardResponsePlugin,
+    stimulus: `
+        <p>Calibração concluída! Preparando para o experimento.</p>
+        <p>Mantenha sua cabeça o mais parada possível durante os próximos estímulos.</p>
+    `,
+    choices: 'NO_KEYS', 
+    trial_duration: 5000, 
+};

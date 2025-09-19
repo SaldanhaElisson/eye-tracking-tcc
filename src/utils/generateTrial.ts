@@ -12,6 +12,8 @@ interface UploadedImage {
 export default function generateTrial(
     images: UploadedImage[],
     typeFile: "img" | "video",
+    imageWidth: number,
+    imageHeight: number,
 ) {
     const mediaPlugin = typeFile === "video"
         ? VideoKeyboardResponsePlugin
@@ -21,8 +23,8 @@ export default function generateTrial(
         type: mediaPlugin,
         stimulus: image.url,
         choices: [" "],
-        stimulus_width: 700,
-        stimulus_height: 900,
+        stimulus_width: imageWidth,
+        stimulus_height: imageHeight,
 
         extensions: [{
             type: jsPsychExtensionWebgazer,

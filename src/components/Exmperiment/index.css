@@ -6,6 +6,7 @@
     height: 100vh;
     width: 100vw;
 }
+
 .jspsych-content{
     font-size: 20px;
     text-align: center;
@@ -50,32 +51,27 @@
     background-color: red !important;
 }
 
-/* Estilos para o container do ImageUploader */
 .image-uploader-container {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 100vh; /* Ocupa a altura total da viewport */
-    width: 100vw; /* Ocupa a largura total da viewport */
-    font-family: Arial, sans-serif; /* Consistente com o JsPsych */
-    font-size: 20px; /* Consistente com o JsPsych */
-    text-align: center;
-    padding: 20px; /* Espaçamento interno */
-    box-sizing: border-box; /* Inclui padding e borda na largura/altura */
+    height: 100vh; 
+    width: 100vw; 
+    font-family: Arial, sans-serif; 
+    font-size: 20px; 
+    padding: 20px; 
 }
 
-/* Estilos para o título e subtítulos */
 .image-uploader-container h3,
 .image-uploader-container h4 {
-    margin-top: 50px; /* Espaçamento superior como em .jspsych-content */
-    margin-bottom: 10px; /* Espaçamento inferior */
-    color: #333; /* Uma cor escura para o texto */
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+    color: #fafafa;
 }
 
-/* Estilos para o input de arquivo */
 .image-uploader-container input[type="file"] {
-    margin: 20px 0; /* Espaçamento acima e abaixo do input */
+    margin: 20px 0; 
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -83,38 +79,79 @@
     cursor: pointer;
 }
 
-/* Estilos para a área de pré-visualização das imagens */
 .image-previews {
-    margin-top: 30px; /* Espaçamento acima da pré-visualização */
-    margin-bottom: 30px; /* Espaçamento abaixo da pré-visualização */
-    max-width: 800px; /* Limita a largura da área de pré-visualização */
-    overflow-x: auto; /* Adiciona scroll se muitas imagens */
+    margin-top: 30px; 
+    margin-bottom: 30px; 
+    max-width: 800px; 
+    overflow-x: auto; 
 }
 
 .image-previews img {
-    margin: 5px; /* Espaçamento entre as miniaturas */
+    margin: 5px; 
     border: 1px solid #ddd;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Estilo para o botão de upload/início do experimento */
 .image-uploader-container button {
-    height: 3rem; /* Um pouco maior que o jspsych-btn */
-    background-color: cadetblue; /* Mesma cor do jspsych-btn */
-    color: white; /* Texto branco para contraste */
+    height: 3rem; 
+    background-color: cadetblue; 
+    color: white; 
     border-radius: 5px;
-    padding: 10px 25px; /* Mais padding para um botão maior */
+    padding: 10px 25px; 
     border: none;
     cursor: pointer;
-    font-size: 20px; /* Mesma fonte do jspsych-content */
-    transition: background-color 0.3s ease; /* Transição suave no hover */
+    font-size: 20px; 
+    transition: background-color 0.3s ease; 
 }
 
 .image-uploader-container button:hover:not(:disabled) {
-    background-color: #589697; /* Um tom ligeiramente mais escuro no hover */
+    background-color: #589697; 
 }
 
 .image-uploader-container button:disabled {
-    background-color: #cccccc; /* Cor para botão desabilitado */
+    background-color: #cccccc; 
     cursor: not-allowed;
 }
+
+.dimension-inputs{
+    margin-bottom: 20px;
+}
+
+.size-input {
+    width: 200px;
+    height: 42px;
+    font-size: 20px;
+}
+
+.size-input-container{
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+}
+
+.size-input-label{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.qtd-recalibration-container{
+    margin-bottom: 30px;
+}
+
+.label-qtd-recalibration-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.qtd-recalibration-input{
+    width: 200px;
+    height: 42px;
+    font-size: 20px;
+}
+

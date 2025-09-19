@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
 
-// Defina uma interface para o objeto de imagem, incluindo URL e nome do arquivo
-interface UploadedImage {
-    url: string;
-    name: string; // Adicionamos o nome do arquivo aqui
-}
+import React, { useState } from 'react';
+import { UploadedImage, UploadPayload } from '../types';
 
 interface ImageUploaderProps {
-    onImagesUploaded: (images: UploadedImage[]) => void; // A prop agora espera um array de UploadedImage
+    onImagesUploaded: (payload: UploadPayload) => void;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesUploaded }) => {
-    const [imageFiles, setImageFiles] = useState<File[]>([]);// Isso mantém os objetos File
-    const [previewImages, setPreviewImages] = useState<UploadedImage[]>([]); // Armazena URL e nome
+    const [imageFiles, setImageFiles] = useState<File[]>([]);
+    const [previewImages, setPreviewImages] = useState<UploadedImage[]>([]);
+    
+    const [width, setWidth] = useState<string>("700");
+    const [height, setHeight] = useState<string>("900");
+
+     const [qtdRecalibration, setQtdRecalibration] = useState<string>("1");
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
@@ -21,15 +22,24 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesUploaded }) => {
 
             const uploadedImages: UploadedImage[] = filesArray.map(file => ({
                 url: URL.createObjectURL(file),
-                name: file.name // Captura o nome do arquivo original
+                name: file.name
             }));
             setPreviewImages(uploadedImages);
         }
     };
 
     const handleUploadClick = () => {
-        // Passa o array de objetos UploadedImage
-        onImagesUploaded(previewImages);
+        const parsedWidth = width ? parseInt(width, 10) : null;
+        const parsedHeight = height ? parseInt(height, 10) : null;
+
+        const parseQtdRecalibration = parseInt(qtdRecalibration) 
+        
+        onImagesUploaded({
+            images: previewImages,
+            width: parsedWidth,
+            height: parsedHeight,
+            qtdRecalibration: parseQtdRecalibration
+        });
     };
 
     return (
@@ -41,6 +51,65 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesUploaded }) => {
                 multiple
                 onChange={handleFileChange}
             />
+            
+            <div className="dimension-inputs">
+                <h4>Definir Tamanho da Imagem (Opcional)</h4>
+                <div  className='size-input-container'>
+                    <label className='size-input-label'>
+                        Largura (px):
+                        <input
+                            className='size-input'
+                            type="number"
+                            value={width}
+                            min="0"
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === '' || parseInt(value) >= 0) {
+                                    setWidth(value);
+                                }}
+                            }
+                        />
+                    </label>
+                    
+                    <label className='size-input-label'>
+                        Altura (px):
+                        <input
+                            className='size-input height-input'
+                            type="number"
+                            value={height}
+                            min="0" 
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === '' || parseInt(value) >= 0) {
+                                    setHeight(value);
+                                }}
+                            }
+                        />
+                    </label>
+                </div>
+            </div>
+
+            <div className='qtd-recalibration-container'>
+                <h4>Definir Quantidade de Recalibração (Opcional)  </h4>
+                <label className='label-qtd-recalibration-input'>
+                   Quantidade (Un) 
+                    <input
+                        className='qtd-recalibration-input'
+                        type='number'
+                        min={1}
+                        value={qtdRecalibration}
+                        onChange={(e) => {
+                            const value = e.target.value;
+
+                            if(value === '' || parseInt(value) >=0){
+                                setQtdRecalibration(value)
+                            }
+                        }}
+                    />
+                </label>
+
+            </div>
+
             {previewImages.length > 0 && (
                 <div className="image-previews">
                     <h4>Imagens Selecionadas:</h4>
@@ -49,13 +118,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesUploaded }) => {
                             <img
                                 key={index}
                                 src={image.url}
-                                alt={`preview-${image.name}`} // Use o nome do arquivo para o alt
+                                alt={`preview-${image.name}`}
                                 style={{ width: '100px', height: '100px', objectFit: 'cover', border: '1px solid #ccc' }}
                             />
                         ))}
                     </div>
                 </div>
             )}
+
             <button onClick={handleUploadClick} disabled={imageFiles.length === 0}>
                 Iniciar Experimento com Imagens
             </button>

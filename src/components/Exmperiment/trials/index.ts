@@ -1,3 +1,3 @@
-export * from './comon';
-export * from './calibration';
-export * from './validation';
+export * from './startConfigs';
+export * from './calibrations';
+export * from './validations';
